@@ -125,19 +125,21 @@ class MovieRecommender:
         searched_row = self.df.iloc[idx]
         searched_movie_info = {
             "movie_id": int(searched_row["movie_id"]) if "movie_id" in searched_row else idx + 1,
-            "title": str(searched_row["title"]),
-            "genres": str(searched_row["genres"]),
-            "rating": float(searched_row["rating"]),
-            "release_year": int(searched_row["release_year"]),
-            "overview": str(searched_row["overview"]),
-            "poster_url": str(searched_row["poster_url"])
+            "title": str(searched_row.get("title", "Unknown Title")),
+            "genres": str(searched_row.get("genres", "N/A")),
+            "rating": float(searched_row.get("rating", 0.0)),
+            "release_year": int(searched_row.get("release_year", 0)),
+            "overview": str(searched_row.get("overview", "")),
+            "poster_url": str(searched_row.get("poster_url", "")),
+            "director": str(searched_row.get("director", "N/A")),
+            "cast": str(searched_row.get("cast", "N/A")),
+            "keywords": str(searched_row.get("keywords", "N/A"))
         }
 
         # Retrieve similarity scores for this movie
         sim_scores = list(enumerate(self.similarity_matrix[idx]))
 
         # Sort movies based on similarity score in descending order
-        # Key: (score)
         sorted_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
 
         # Exclude the searched movie itself (which is at index idx with score 1.0)
@@ -147,20 +149,25 @@ class MovieRecommender:
         top_items = filtered_scores[:n]
 
         recommendations = []
-        for sim_idx, score in top_items:
+        for rank, (sim_idx, score) in enumerate(top_items, start=1):
             row = self.df.iloc[sim_idx]
             # Convert similarity score (0.0 to 1.0) into a percentage
             score_pct = round(float(score) * 100, 1)
 
             recommendations.append({
+                "rank": rank,
                 "movie_id": int(row["movie_id"]) if "movie_id" in row else sim_idx + 1,
-                "title": str(row["title"]),
-                "genres": str(row["genres"]),
-                "rating": float(row["rating"]),
-                "release_year": int(row["release_year"]),
-                "overview": str(row["overview"]),
-                "poster_url": str(row["poster_url"]),
-                "similarity_score": score_pct
+                "title": str(row.get("title", "Unknown Title")),
+                "genres": str(row.get("genres", "N/A")),
+                "rating": float(row.get("rating", 0.0)),
+                "release_year": int(row.get("release_year", 0)),
+                "overview": str(row.get("overview", "")),
+                "poster_url": str(row.get("poster_url", "")),
+                "director": str(row.get("director", "N/A")),
+                "cast": str(row.get("cast", "N/A")),
+                "keywords": str(row.get("keywords", "N/A")),
+                "similarity_score": score_pct,
+                "similarity_percentage": score_pct
             })
 
         return {

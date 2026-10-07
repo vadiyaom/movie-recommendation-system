@@ -207,17 +207,17 @@ if result["found"]:
             st.image("https://via.placeholder.com/300x450?text=No+Poster", use_container_width=True)
             
     with hero_col2:
-        st.markdown(f"## {searched['title']} ({searched['release_year']})")
-        st.markdown(f"⭐ **IMDb Rating:** `{searched['rating']} / 10` | 🎬 **Director:** `{searched['director']}`")
-        st.markdown(f"🎭 **Genres:** `{searched['genres']}`")
-        st.markdown(f"🔑 **Thematic Keywords:** `{searched['keywords']}`")
-        st.markdown(f"👥 **Starring:** `{searched['cast']}`")
-        st.info(f"📝 **Overview:** {searched['overview']}")
+        st.markdown(f"## {searched.get('title', 'Unknown')} ({searched.get('release_year', 'N/A')})")
+        st.markdown(f"⭐ **IMDb Rating:** `{searched.get('rating', 'N/A')}` / 10 | 🎬 **Director:** `{searched.get('director', 'N/A')}`")
+        st.markdown(f"🎭 **Genres:** `{searched.get('genres', 'N/A')}`")
+        st.markdown(f"🔑 **Thematic Keywords:** `{searched.get('keywords', 'N/A')}`")
+        st.markdown(f"👥 **Starring:** `{searched.get('cast', 'N/A')}`")
+        st.info(f"📝 **Overview:** {searched.get('overview', 'No overview available.')}")
 
     # Recommended Movies Grid
     st.markdown("---")
     st.markdown(f"### 🍿 Top {len(recs)} Recommended Movies for You")
-    st.markdown(f"*Ranked by textual and thematic Cosine Similarity with **{searched['title']}***")
+    st.markdown(f"*Ranked by textual and thematic Cosine Similarity with **{searched.get('title', 'Selected Movie')}***")
 
     # Render cards in responsive columns (3 columns per row)
     cols_per_row = 3
@@ -230,24 +230,29 @@ if result["found"]:
                 with col:
                     with st.container(border=True):
                         # Poster
-                        poster_url = item.get("poster_url")
+                        poster_url = item.get("poster_url", "")
                         if poster_url and str(poster_url).startswith("http"):
-                            st.image(poster_url, use_container_width=True)
+                            try:
+                                st.image(poster_url, use_container_width=True)
+                            except Exception:
+                                st.image("https://via.placeholder.com/300x450?text=" + str(item.get("title", "Movie")).replace(" ", "+"), use_container_width=True)
                         else:
-                            st.image("https://via.placeholder.com/300x450?text=No+Poster", use_container_width=True)
+                            st.image("https://via.placeholder.com/300x450?text=" + str(item.get("title", "Movie")).replace(" ", "+"), use_container_width=True)
 
                         # Match Badge & Title
+                        match_pct = item.get("similarity_percentage", item.get("similarity_score", 0.0))
+                        rank_num = item.get("rank", card_idx + 1)
                         st.markdown(
-                            f"<span class='similarity-pill'>🎯 {item['similarity_percentage']}% Match</span>",
+                            f"<span class='similarity-pill'>🎯 {match_pct}% Match</span>",
                             unsafe_allow_html=True
                         )
-                        st.markdown(f"#### {item['rank']}. {item['title']} ({item['release_year']})")
-                        st.caption(f"⭐ **{item['rating']} / 10** | 🎬 {item['director']}")
-                        st.markdown(f"🎭 **Genres:** *{item['genres']}*")
+                        st.markdown(f"#### {rank_num}. {item.get('title', 'Unknown')} ({item.get('release_year', 'N/A')})")
+                        st.caption(f"⭐ **{item.get('rating', 'N/A')} / 10** | 🎬 {item.get('director', 'N/A')}")
+                        st.markdown(f"🎭 **Genres:** *{item.get('genres', 'N/A')}*")
                         
                         with st.expander("📖 Read Synopsis"):
-                            st.write(item["overview"])
-                            st.markdown(f"**Cast:** {item['cast']}")
+                            st.write(item.get("overview", "No synopsis available."))
+                            st.markdown(f"**Cast:** {item.get('cast', 'N/A')}")
 else:
     st.error(f"Movie '{selected_movie}' not found in catalog.")
 
