@@ -12,13 +12,18 @@ import sqlite3
 import pandas as pd
 import streamlit as st
 
-# Ensure project root is in sys.path
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+# Universal cross-directory project root detection
+CURRENT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = CURRENT_DIR if (CURRENT_DIR / "data").exists() else CURRENT_DIR.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.recommendation import MovieRecommender, get_recommender
-from src.data_preprocessing import get_default_data_path
+try:
+    from src.recommendation import MovieRecommender, get_recommender
+    from src.data_preprocessing import get_default_data_path
+except ImportError:
+    from recommendation import MovieRecommender, get_recommender
+    from data_preprocessing import get_default_data_path
 
 # =============================================================================
 # PAGE CONFIGURATION

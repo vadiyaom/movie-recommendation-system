@@ -1,5 +1,6 @@
 # 🎬 Movie Recommendation System
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://movie-recommendation-systemgit-ryp9wamswmrnmusjugepw7.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Pandas](https://img.shields.io/badge/Pandas-2.x-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org/)
 [![NumPy](https://img.shields.io/badge/NumPy-1.24%2B-013243?logo=numpy&logoColor=white)](https://numpy.org/)
@@ -282,8 +283,8 @@ Interactive deep dive demonstrating live SQL query execution, catalog filtering,
 ## 🚀 Live Demo & Free Cloud Deployment
 
 ### Live Application Link
-> 🔗 **Live Demo:** [ADD LIVE DEMO LINK HERE]  
-> *(Deploy on Streamlit Community Cloud using the step-by-step guide below).*
+> 🚀 **Live Web Application:** [https://movie-recommendation-systemgit-ryp9wamswmrnmusjugepw7.streamlit.app/](https://movie-recommendation-systemgit-ryp9wamswmrnmusjugepw7.streamlit.app/)  
+> *(Deployed live for free on Streamlit Community Cloud).*
 
 ### Deploying to Streamlit Community Cloud (100% Free):
 Streamlit Community Cloud allows free hosting directly connected to your GitHub repository:
@@ -296,8 +297,8 @@ Streamlit Community Cloud allows free hosting directly connected to your GitHub 
    - **Branch**: `main`
    - **Main file path**: `src/app.py`
 5. **Deploy**: Click **"Deploy!"**.
-6. **Obtain Live URL**: Within 1–2 minutes, Streamlit will install dependencies and deploy the live application at:
-   `https://vadiyaom-movie-recommendation-system.streamlit.app` (or your custom URL). Update the `[ADD LIVE DEMO LINK HERE]` above with your live link.
+6. **Live URL**: The live application is active at:
+   `https://movie-recommendation-systemgit-ryp9wamswmrnmusjugepw7.streamlit.app/`
 
 ---
 
