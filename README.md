@@ -354,6 +354,7 @@ http://localhost:8501
 - **Email:** [vadiyaom18@gmail.com](mailto:vadiyaom18@gmail.com)  
 - **College:** M J College of Commerce  
 - **University:** Maharaja Krishnakumarsinhji Bhavnagar University  
+- **Degree:** Bachelor of Computer Applications (B.C.A)  
 - **Expected Graduation:** July 2026  
 - **CGPA:** 7.08 / 10  
 - **Career Focus:** Data Science  

@@ -121,7 +121,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 👨‍💻 Project Developer")
     st.markdown("**Om Vadiya**")
-    st.markdown("🎓 *B.Com (Graduating July 2026)*")
+    st.markdown("🎓 *B.C.A (Graduating July 2026)*")
     st.markdown("🏛️ *M J College of Commerce*")
     st.markdown("🏫 *Maharaja Krishnakumarsinhji Bhavnagar University*")
     st.markdown("🎯 *Career Focus: Data Science & ML*")
@@ -408,7 +408,7 @@ with tab_author:
     - **Name:** Om Vadiya
     - **Role:** Entry-Level Data Science & Machine Learning Aspirant
     - **Graduation:** July 2026
-    - **Degree:** Bachelor of Commerce (CGPA: 7.08 / 10)
+    - **Degree:** Bachelor of Computer Applications (B.C.A) (CGPA: 7.08 / 10)
     - **College:** M J College of Commerce
     - **University:** Maharaja Krishnakumarsinhji Bhavnagar University
     - **Career Focus:** Data Science, Predictive Modeling, Machine Learning Engineering

@@ -2,7 +2,7 @@
 
 **Author:** Om Vadiya  
 **Role:** Entry-Level Data Science Aspirant  
-**Degree:** Bachelor of Commerce (Graduating July 2026, CGPA: 7.08/10)  
+**Degree:** Bachelor of Computer Applications (B.C.A) (Graduating July 2026, CGPA: 7.08/10)  
 **Institution:** M J College of Commerce, Maharaja Krishnakumarsinhji Bhavnagar University  
 **Contact:** [vadiyaom18@gmail.com](mailto:vadiyaom18@gmail.com) | [GitHub Profile](https://github.com/vadiyaom) | [LinkedIn Profile](https://www.linkedin.com/in/Vadiya-Om/) | [Live Web App](https://movie-recommendation-systemgit-ryp9wamswmrnmusjugepw7.streamlit.app/)  
 
