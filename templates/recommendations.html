@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personalized Movie Recommendations based on Content-Based Machine Learning Filtering.">
+    <title>{{ query_title }} - Recommendations | CineMatch</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand-logo">
+                <span class="logo-icon">🎬</span>
+                <span class="logo-text">Cine<span class="highlight">Match</span></span>
+            </a>
+            <div class="nav-search-compact">
+                <form action="{{ url_for('recommend') }}" method="POST" class="compact-search-form">
+                    <input
+                        type="text"
+                        name="movie_title"
+                        class="compact-input"
+                        placeholder="Search another movie..."
+                        list="compact-movie-datalist"
+                        required
+                    >
+                    <datalist id="compact-movie-datalist">
+                        {% for title in all_movies %}
+                        <option value="{{ title }}"></option>
+                        {% endfor %}
+                    </datalist>
+                    <button type="submit" class="btn-compact">Search</button>
+                </form>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('history') }}" class="nav-link">Search History</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-wrapper">
+        {% if not found %}
+        <!-- Movie Not Found View -->
+        <section class="not-found-section">
+            <div class="not-found-card">
+                <div class="not-found-icon">🎬🔍</div>
+                <h1 class="not-found-title">Movie Not Found</h1>
+                <p class="not-found-desc">
+                    {{ error_message }}
+                </p>
+                <div class="not-found-actions">
+                    <a href="{{ url_for('home') }}" class="btn-primary">Search Another Movie</a>
+                </div>
+
+                <!-- Suggestions of Available Titles -->
+                <div class="available-suggestions">
+                    <h3>Try searching for one of these available movies:</h3>
+                    <div class="quick-tags">
+                        {% for title in all_movies[:10] %}
+                        <a href="{{ url_for('recommend', title=title) }}" class="tag-chip">{{ title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% else %}
+        <!-- Header Info -->
+        <div class="page-top-actions">
+            <a href="{{ url_for('home') }}" class="btn-back">← Search Another Movie</a>
+            <div class="timestamp-pill">Top 10 Similar Matches</div>
+        </div>
+
+        <!-- Searched Movie Hero Banner -->
+        {% if searched_movie %}
+        <section class="searched-movie-banner">
+            <div class="banner-poster-container">
+                <img
+                    src="{{ searched_movie.poster_url }}"
+                    alt="{{ searched_movie.title }} Poster"
+                    class="banner-poster-img"
+                    onerror="handlePosterError(this, '{{ searched_movie.title }}')"
+                >
+            </div>
+            <div class="banner-details">
+                <span class="banner-badge">Searched Movie</span>
+                <h1 class="banner-title">{{ searched_movie.title }}</h1>
+                <div class="banner-meta">
+                    <span class="meta-rating">⭐ {{ searched_movie.rating }} / 10</span>
+                    <span class="meta-dot">•</span>
+                    <span class="meta-year">{{ searched_movie.release_year }}</span>
+                    <span class="meta-dot">•</span>
+                    <span class="meta-genre">{{ searched_movie.genres }}</span>
+                </div>
+                <p class="banner-overview">{{ searched_movie.overview }}</p>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Recommendations Grid Section -->
+        <section class="recommendations-section">
+            <div class="section-heading-bar">
+                <div>
+                    <h2 class="section-title">Recommendations for: <span class="highlight-text">{{ query_title }}</span></h2>
+                    <p class="section-subtitle">Ranked by cosine similarity calculated over genre, plot, cast, director, and keywords.</p>
+                </div>
+            </div>
+
+            <div class="movies-grid">
+                {% for movie in recommendations %}
+                <article class="movie-card" id="movie-card-{{ movie.movie_id }}">
+                    <!-- Poster Container with Fallback Support -->
+                    <div class="card-poster-wrapper">
+                        <img
+                            src="{{ movie.poster_url }}"
+                            alt="{{ movie.title }}"
+                            class="card-poster-img"
+                            loading="lazy"
+                            onerror="handlePosterError(this, '{{ movie.title }}')"
+                        >
+                        <div class="card-similarity-badge">
+                            {{ movie.similarity_score }}% Match
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-content">
+                        <div class="card-meta-row">
+                            <span class="card-rating">⭐ {{ movie.rating }}</span>
+                            <span class="card-year">{{ movie.release_year }}</span>
+                        </div>
+
+                        <h3 class="card-title" title="{{ movie.title }}">{{ movie.title }}</h3>
+                        <p class="card-genres">{{ movie.genres }}</p>
+                        <p class="card-overview">{{ movie.overview }}</p>
+
+                        <!-- Similarity Meter Bar -->
+                        <div class="similarity-meter">
+                            <div class="meter-bar" style="width: {{ movie.similarity_score }}%;"></div>
+                        </div>
+
+                        <div class="card-action-row">
+                            <a href="{{ url_for('recommend', title=movie.title) }}" class="btn-card-recommend">
+                                Find Similar ↗
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <!-- Bottom Call to Action -->
+            <div class="bottom-cta-container">
+                <a href="{{ url_for('home') }}" class="btn-primary">Search Another Movie</a>
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>© 2026 CineMatch • Content-Based Movie Recommendation System</p>
+            <p class="footer-note">Free Deployment on Render • Data science portfolio ready</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

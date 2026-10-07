@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Machine Learning Movie Recommendation System using Content-Based Filtering, TF-IDF vectorization, and Cosine Similarity.">
+    <title>CineMatch | Movie Recommendation System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('home') }}" class="brand-logo" id="brand-logo">
+                <span class="logo-icon">🎬</span>
+                <span class="logo-text">Cine<span class="highlight">Match</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link active">Home</a>
+                <a href="#history-section" class="nav-link" id="nav-history-link">Search History</a>
+                <a href="#about-section" class="nav-link">How It Works</a>
+                <a href="{{ url_for('health') }}" target="_blank" class="nav-badge">System Status: Active</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-wrapper">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-badge">AI-Powered Machine Learning</div>
+            <h1 class="hero-title">MOVIE RECOMMENDATION SYSTEM</h1>
+            <p class="hero-subtitle">
+                Find movies similar to your favorite movie in seconds. Powered by Content-Based Filtering &amp; Natural Language Processing.
+            </p>
+
+            <!-- Error Banner -->
+            {% if error_message %}
+            <div class="alert-box alert-error" id="error-alert">
+                <span class="alert-icon">⚠️</span>
+                <span>{{ error_message }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Search Form Card -->
+            <div class="search-card">
+                <form action="{{ url_for('recommend') }}" method="POST" class="search-form" id="recommendation-form">
+                    <div class="input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input
+                            type="text"
+                            name="movie_title"
+                            id="movie-search-input"
+                            class="search-input"
+                            placeholder="Enter movie name (e.g. The Dark Knight, Inception)..."
+                            list="movie-datalist"
+                            autocomplete="off"
+                            required
+                        >
+                        <!-- Autocomplete Datalist -->
+                        <datalist id="movie-datalist">
+                            {% for title in all_movies %}
+                            <option value="{{ title }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="search-submit-btn">
+                        <span class="btn-text">Get Recommendations</span>
+                        <span class="btn-spinner" style="display: none;">Finding Similar Movies...</span>
+                    </button>
+                </form>
+
+                <!-- Popular Suggestions Chips -->
+                <div class="quick-tags-wrapper">
+                    <span class="quick-tags-label">Trending Searches:</span>
+                    <div class="quick-tags">
+                        <button type="button" class="tag-chip" onclick="selectMovie('The Dark Knight')">The Dark Knight</button>
+                        <button type="button" class="tag-chip" onclick="selectMovie('Inception')">Inception</button>
+                        <button type="button" class="tag-chip" onclick="selectMovie('Interstellar')">Interstellar</button>
+                        <button type="button" class="tag-chip" onclick="selectMovie('Avatar')">Avatar</button>
+                        <button type="button" class="tag-chip" onclick="selectMovie('The Matrix')">The Matrix</button>
+                        <button type="button" class="tag-chip" onclick="selectMovie('Pulp Fiction')">Pulp Fiction</button>
+                        <button type="button" class="tag-chip" onclick="selectMovie('Spirited Away')">Spirited Away</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="info-section" id="about-section">
+            <h2 class="section-title">How Our Recommendation Algorithm Works</h2>
+            <p class="section-subtitle">
+                Our system uses Machine Learning and Content-Based Filtering to find movies similar to your selected movie.
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📑</div>
+                    <h3 class="feature-title">Feature Extraction</h3>
+                    <p class="feature-desc">
+                        Combines rich movie attributes including genres, keywords, plot overview, lead cast, and director into a unified textual metadata vector.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">TF-IDF Vectorization</h3>
+                    <p class="feature-desc">
+                        Converts cleaned movie descriptions into term frequency-inverse document frequency matrices, weighting unique keywords above common terms.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📐</div>
+                    <h3 class="feature-title">Cosine Similarity</h3>
+                    <p class="feature-desc">
+                        Calculates multi-dimensional cosine angles between feature vectors, sorting the catalog to output the top 10 highest-affinity recommendations.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search History Section -->
+        <section class="history-section" id="history-section">
+            <div class="history-header">
+                <div>
+                    <h2 class="section-title">Search History</h2>
+                    <p class="section-subtitle">Logged locally in an SQLite database (free &amp; zero-configuration).</p>
+                </div>
+                <a href="{{ url_for('history') }}" class="btn-secondary" id="refresh-history-btn">View All History</a>
+            </div>
+
+            {% if recent_history and recent_history|length > 0 %}
+            <div class="history-table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Movie Title</th>
+                            <th>Searched At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in recent_history %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td class="history-movie-name">
+                                <strong>{{ item.movie_title }}</strong>
+                            </td>
+                            <td class="history-timestamp">{{ item.searched_at }}</td>
+                            <td>
+                                <a href="{{ url_for('recommend', title=item.movie_title) }}" class="btn-table-action">
+                                    Re-run Search ↗
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">📂</span>
+                <p>No search history recorded yet. Try searching for a movie above!</p>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>© 2026 CineMatch • Content-Based Movie Recommendation System</p>
+            <p class="footer-note">
+                100% Free Deployment on Render | Open Source Educational Project
+            </p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
