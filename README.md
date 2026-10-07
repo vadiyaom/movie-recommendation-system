@@ -1,85 +1,226 @@
-# 🎬 CineMatch — Movie Recommendation System
+# 🎬 Movie Recommendation System
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python)
-![Flask](https://img.shields.io/badge/Flask-3.x-black?logo=flask)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.3%2B-orange?logo=scikit-learn)
-![Deployment](https://img.shields.io/badge/Deploy-Render%20Free%20Tier-success?logo=render)
-![License](https://img.shields.io/badge/License-MIT-green)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-2.x-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-1.24%2B-013243?logo=numpy&logoColor=white)](https://numpy.org/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.3%2B-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![SQL](https://img.shields.io/badge/SQL-SQLite%20%7C%20Postgres-4479A1?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A complete, production-ready **Content-Based Movie Recommendation System** built with **Python, Scikit-Learn, and Flask**. It vectorizes rich movie metadata (genres, overview, keywords, cast, and director) using **TF-IDF Vectorization** and computes high-dimensional **Cosine Similarity** to instantly recommend the top 10 movies most similar to any searched title.
-
-Designed specifically for **$0 / ₹0 free deployment** on **Render**, requiring **no paid APIs**, **no paid databases**, and **no paid cloud infrastructure**.
-
----
-
-## 🌟 Key Features
-
-- **Content-Based Machine Learning Engine**: Uses TF-IDF and Cosine Similarity to find thematic and stylistic movie affinities.
-- **Top 10 Recommendations**: Displays interactive movie cards with poster artwork, genre tags, IMDb rating, release year, overview, and percentage similarity match.
-- **Zero Runtime Latency**: The TF-IDF matrix and similarity models are precomputed at server startup so user searches respond in milliseconds.
-- **Search History Logging**: Stores successful search queries in an SQLite database using parameterized queries to prevent SQL injection.
-- **Robust Fallback Handling**:
-  - Gracefully handles unknown movies with helpful suggestions.
-  - Automatically renders custom CSS poster fallbacks if remote poster image links fail or the user is offline.
-  - Validates empty search inputs on both frontend and backend.
-- **Modern Responsive Dark Theme**: Handcrafted cinema dark aesthetic with glassmorphism, glowing micro-animations, and mobile responsiveness without heavy UI frameworks.
-- **Free Cloud Ready**: Includes `render.yaml` for 1-click Render blueprint deployment.
+> A production-ready, content-based Movie Recommendation System built with **Python**, **Scikit-Learn**, **SQL**, and **Streamlit**. Evaluates multi-attribute metadata affinities using **TF-IDF Vectorization** and high-dimensional **Cosine Similarity** to instantly recommend films matching a user's taste.
 
 ---
 
-## 🏗️ Project Architecture
+## 📌 Table of Contents
+1. [About the Project](#-about-the-project)
+2. [Problem Statement](#-problem-statement)
+3. [Objective](#-objective)
+4. [Key Features](#-key-features)
+5. [Technologies Used](#-technologies-used)
+6. [Dataset](#-dataset)
+7. [Machine Learning Methodology](#-machine-learning-methodology)
+8. [Data Science Workflow](#-data-science-workflow)
+9. [Relational SQL Analytics](#-relational-sql-analytics)
+10. [Project Folder Structure](#-project-folder-structure)
+11. [Application Screenshots](#-application-screenshots)
+12. [Live Demo & Free Cloud Deployment](#-live-demo--free-cloud-deployment)
+13. [Local Installation & Setup](#-local-installation--setup)
+14. [Project Documentation & Interview Guide](#-project-documentation--interview-guide)
+15. [Author](#-author)
+16. [License](#-license)
 
-```text
-index.html / recommendations.html (Frontend UI)
-       │
-       ▼ (HTTP GET / POST)
-   Flask Application (app.py)
-       │
-       ├─────────────────────────────────┐
-       ▼                                 ▼
-Recommendation Engine (src/recommendation.py)   SQLite Database (database.py)
-       │                                         │
-       ▼                                         ▼
-Preprocessing Pipeline (src/data_preprocessing.py)  movies.db (Search History)
-       │
-       ▼
-Movie Dataset (data/movies.csv)
+---
+
+## 📖 About the Project
+Finding engaging films within modern streaming catalogs has become increasingly challenging. The **Movie Recommendation System** solves this challenge by analyzing intrinsic movie attributes—including genres, plot summaries, thematic keywords, cast members, and directors—to discover semantic and stylistic affinities between films.
+
+Unlike collaborative filtering systems that require extensive user rating histories and encounter "cold-start" friction with new content, this content-based recommendation engine creates continuous vector representations of movie metadata and measures geometric angles between titles. It offers instantaneous, transparent, and explainable recommendations via an intuitive web interface built with Streamlit.
+
+---
+
+## 🎯 Problem Statement
+Digital media catalogs contain thousands of entertainment options. When browsing without personalized guidance, users encounter decision fatigue—a cognitive overload often termed the *paradox of choice*. 
+
+Traditional browsing mechanisms rely almost exclusively on blunt categorical filters (e.g., sorting by release year or broad genre tags). These mechanisms fail to recognize that a viewer who appreciates the cerebral sci-fi narrative and directorial tone of *Inception* might enjoy *Tenet* or *The Matrix* far more than a generic action film released in the same decade. This project addresses the challenge of algorithmically ranking and retrieving the most stylistically relevant films for any chosen movie.
+
+---
+
+## 🎯 Objective
+The primary objective of this project is to build an end-to-end, modular, and interview-ready Data Science solution that:
+1. Cleans and consolidates diverse textual movie metadata into structured feature vectors.
+2. Computes pairwise similarity between films using **TF-IDF Vectorization** and **Cosine Similarity**.
+3. Ranks and returns the top $N$ most similar movies alongside quantifiable match percentages.
+4. Demonstrates end-to-end Data Science competence: data cleaning, feature engineering, exploratory data analysis, machine learning, relational database querying with SQL, and web application deployment.
+
+---
+
+## ✨ Key Features
+Every feature listed below is fully implemented and tested in the codebase:
+
+- **Movie Search & Selection**: Autocomplete search dropdown to quickly select any movie from the catalog.
+- **Similar Movie Recommendations**: Dynamic recommendation engine generating top 3 to 15 similar movies (adjustable via user slider).
+- **Cosine Similarity Scoring**: Computes and displays an exact percentage match badge (e.g., `🎯 88.4% Match`) for every recommended title.
+- **Rich Metadata Display**: Shows movie posters, release years, IMDb ratings, directors, genres, keywords, and expandable plot summaries.
+- **Random Movie Discovery**: Interactive "🎲 Random Film" feature allowing users and recruiters to test recommendations on unexpected titles.
+- **Interactive Dataset Explorer**: Built-in interactive data table with live filters for minimum rating and keyword searches across titles, genres, and directors.
+- **Interactive SQL Analytics Showcase**: Live UI tab demonstrating analytical SQL queries executed directly against the dataset.
+- **Zero Runtime Latency**: Model matrices and vectorizers are cached at application startup using `@st.cache_resource`, ensuring sub-10ms response times.
+- **Fallback Poster Handling**: Gracefully falls back to placeholder artwork if remote poster URLs are unavailable.
+
+---
+
+## 🛠️ Technologies Used
+
+| Technology | Purpose in Project |
+|---|---|
+| **Python** | Main programming language used across all modules and scripts |
+| **Pandas** | Tabular data manipulation, handling missing values, and feature engineering |
+| **NumPy** | Numerical vector calculations and multidimensional matrix indexing |
+| **Scikit-learn** | Machine learning pipeline: `TfidfVectorizer` and `cosine_similarity` |
+| **SQL (SQLite)** | Relational schema creation, catalog aggregations, CTEs, and search logging |
+| **Streamlit** | Interactive web application user interface and model presentation |
+| **Git & GitHub** | Version control, documentation repository, and cloud deployment integration |
+
+---
+
+## 📊 Dataset
+
+The project includes a curated dataset located at `data/movies.csv`.
+
+### Dataset Details
+- **Source**: Curated selection of critically acclaimed blockbusters and cinematic classics.
+- **Number of Records**: 50 movies (scalable to 5,000+ records).
+- **Format**: Comma-Separated Values (`.csv`).
+
+### Schema & Important Columns
+| Column Name | Data Type | Description | Example |
+|---|---|---|---|
+| `movie_id` | Integer | Unique identifier for each movie | `4` |
+| `title` | String | Commercial release title | `Inception` |
+| `genres` | String | Categorical genre tags | `Action, Sci-Fi, Thriller` |
+| `overview` | String | Plot synopsis and narrative summary | `A thief who steals corporate secrets...` |
+| `keywords` | String | Core thematic keywords | `dream subconscious inception heist` |
+| `cast` | String | Lead actors and actresses | `Leonardo DiCaprio, Joseph Gordon-Levitt` |
+| `director` | String | Directing talent | `Christopher Nolan` |
+| `rating` | Float | Viewer rating on a scale of 0.0 to 10.0 | `8.8` |
+| `release_year` | Integer | Year of theatrical release | `2010` |
+| `poster_url` | String | Web URL pointing to movie artwork | `https://image.tmdb.org/...` |
+
+### Preprocessing Performed on Dataset
+1. **Null Handling**: Checked for missing values and imputed empty strings (`""`) to ensure vectorization stability.
+2. **Text Normalization**: Converted all text to lowercase and stripped non-alphanumeric punctuation.
+3. **Feature Concatenation**: Merged `genres`, `keywords`, `overview`, `cast`, and `director` into a unified `combined_features` string.
+
+> **Extensibility**: The codebase dynamically adapts to any larger dataset (such as the Kaggle TMDB 5,000 or TMDB 45,000 dataset). Simply place the updated CSV in `data/movies.csv` with matching column headers.
+
+---
+
+## 🧠 Machine Learning Methodology
+
+The core recommendation algorithm uses **Content-Based Filtering** through natural language vectorization and geometric similarity calculation.
+
+```
+                    ┌────────────────────────────┐
+                    │ Raw Metadata Columns       │
+                    │ (genres, cast, director..) │
+                    └─────────────┬──────────────┘
+                                  │ Preprocessing & Imputation
+                                  ▼
+                    ┌────────────────────────────┐
+                    │ combined_features (String) │
+                    └─────────────┬──────────────┘
+                                  │ TfidfVectorizer(ngram_range=(1,2))
+                                  ▼
+                    ┌────────────────────────────┐
+                    │ High-Dimensional Matrix    │
+                    │ Shape: (50 movies, vocab)  │
+                    └─────────────┬──────────────┘
+                                  │ cosine_similarity()
+                                  ▼
+                    ┌────────────────────────────┐
+                    │ Pairwise Similarity Matrix │
+                    │ Shape: (50 x 50)           │
+                    └─────────────┬──────────────┘
+                                  │ Sort Descending & Exclude Self
+                                  ▼
+                    ┌────────────────────────────┐
+                    │ Top N Recommended Movies   │
+                    └────────────────────────────┘
 ```
 
+### 1. Text Preprocessing & Feature Engineering
+Descriptive text fields are lowercased and stripped of special characters. Then, a unified metadata representation is constructed:
+```python
+combined_features = genres + " " + keywords + " " + overview + " " + cast + " " + director
+```
+This ensures that thematic plot keywords, directorial style, and actor collaborations are given joint consideration.
+
+### 2. TF-IDF Vectorization
+The `TfidfVectorizer` transforms the unstructured textual strings into continuous numerical vectors:
+$$\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \text{IDF}(t, D)$$
+- **Term Frequency (TF)**: Quantifies the frequency of term $t$ in a specific movie's metadata string $d$.
+- **Inverse Document Frequency (IDF)**: Penalizes words that appear ubiquitously across the entire catalog and boosts distinct, informative terms (e.g., *Gotham*, *multiverse*, *wormhole*).
+- **Configuration**: Uses unigrams and bigrams (`ngram_range=(1, 2)`) to capture compound expressions like *science fiction* or *comic book*.
+
+### 3. Cosine Similarity Calculation
+Pairwise geometric affinity is computed using Cosine Similarity:
+$$\text{Cosine Similarity}(\vec{A}, \vec{B}) = \frac{\vec{A} \cdot \vec{B}}{\|\vec{A}\| \|\vec{B}\|} = \frac{\sum_{i=1}^{n} A_i B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \sqrt{\sum_{i=1}^{n} B_i^2}}$$
+
+#### Why Cosine Similarity is Ideal for This Project:
+- **Length Invariance**: Plot overviews vary significantly in word length. Euclidean distance would penalize a movie with a concise 30-word synopsis when compared against a 150-word synopsis, even if both describe the same theme. Cosine similarity divides by vector magnitude, measuring purely the **directional angle** between vectors.
+- **Bounded Metric**: Output values range between **0.0** (completely orthogonal / no common terms) and **1.0** (identical profile), translating directly into an intuitive percentage match for users.
+
 ---
 
-## 🧠 Machine Learning Workflow
+## 🔄 Data Science Workflow
 
-```text
-                 MOVIE DATASET (movies.csv)
-                            ↓
-                      DATA CLEANING
-             (Handle NaNs, Lowercase, Normalize)
-                            ↓
-                   FEATURE ENGINEERING
-           (genres + keywords + overview + cast + director)
-                            ↓
-                 COMBINE MOVIE FEATURES
-                            ↓
-                    TF-IDF VECTORIZATION
-             (TfidfVectorizer: 1-gram & 2-gram)
-                            ↓
-                     TF-IDF MATRIX
-                            ↓
-                   COSINE SIMILARITY
-             (Pairwise Dot Product / Norms)
-                            ↓
-                   SIMILARITY SCORES
-                            ↓
-                      SORT MOVIES
-                 (Descending Affinity)
-                            ↓
-               EXCLUDE SEARCHED QUERY MOVIE
-                            ↓
-                TOP 10 RECOMMENDATIONS
-                            ↓
-                     FLASK WEBSITE
 ```
+   Dataset (data/movies.csv)
+             ↓
+       Data Cleaning (handle missing values, lowercasing, regex cleaning)
+             ↓
+  Exploratory Data Analysis (distribution of ratings, release decades, genres)
+             ↓
+    Feature Engineering (combine genres, keywords, overview, cast, director)
+             ↓
+   Feature Vectorization (Scikit-Learn TfidfVectorizer with 1-gram & 2-gram)
+             ↓
+   Similarity Calculation (pairwise Cosine Similarity matrix computation)
+             ↓
+       Recommendation (lookup target index, rank scores, slice top N)
+             ↓
+   Streamlit Application (interactive web UI, metrics, and SQL analytics)
+```
+
+1. **Dataset**: Ingest tabular data from `data/movies.csv` using cross-platform path resolution.
+2. **Data Cleaning**: Impute `NaN` text fields with empty strings and format numeric data types.
+3. **Exploratory Data Analysis**: Analyze rating distributions, prominent directors, and genre frequencies in `notebooks/movie_recommendation.ipynb`.
+4. **Feature Engineering**: Synthesize disparate columns into an enriched textual document per movie.
+5. **Feature Vectorization**: Convert text documents into numerical feature vectors.
+6. **Similarity Calculation**: Compute symmetric pairwise cosine similarity matrix.
+7. **Recommendation**: Retrieve similarity scores for the target movie, sort descending, discard self-match, and return top $N$ titles.
+8. **Streamlit Application**: Render reactive movie cards, poster artwork, similarity pills, and interactive analytics tabs.
+
+---
+
+## 🗄️ Relational SQL Analytics
+
+To demonstrate database skills alongside machine learning, the `sql/` directory provides complete schema definitions and analytical queries.
+
+- **`sql/create_tables.sql`**: Normalized relational schema containing `movies`, lookup table `genres`, many-to-many junction table `movie_genres`, and `search_history` log table.
+- **`sql/analysis_queries.sql`**: Production-grade analytical queries answering realistic catalog questions:
+
+| Query Title | SQL Concepts Demonstrated | Business Question Answered |
+|---|---|---|
+| **Top Modern Blockbusters** | `SELECT`, `WHERE`, `ORDER BY` | Identifies critically acclaimed movies ($\ge 8.5$ rating) released since 2000. |
+| **Catalog Summary Metrics** | `COUNT`, `AVG`, `MIN`, `MAX`, `ROUND` | Calculates high-level KPIs: catalog size, average rating, rating spread, and year span. |
+| **Director Performance** | `GROUP BY`, `HAVING`, `COUNT`, `AVG` | Evaluates directors with at least 2 catalog films, ranked by their filmography average. |
+| **Decade Release Trends** | Computed column grouping, integer math | Groups films into 10-year release buckets and computes decade-level average ratings. |
+| **Normalized Genre Breakdown** | `INNER JOIN`, Junction table, `GROUP BY` | Maps movies across normalized genres to count films and average ratings per genre. |
+| **Above-Average Films** | Uncorrelated scalar subquery in `WHERE` | Retrieves movies with ratings exceeding the catalog's global average. |
+| **Top Film per Genre** | Common Table Expression (`WITH`), `DENSE_RANK()` | Ranks movies within each genre and extracts the top film using window functions. |
+| **Search Frequency Analysis** | `WITH`, `LEFT JOIN`, `COALESCE`, `COUNT` | Analyzes search history query volume and checks correlation with catalog rating. |
 
 ---
 
@@ -88,250 +229,136 @@ Movie Dataset (data/movies.csv)
 ```text
 Movie-Recommendation-System/
 │
+├── README.md                      # Comprehensive project documentation
+├── requirements.txt               # Minimal required Python dependencies
+├── .gitignore                     # Git ignore rules for clean repository
+├── LICENSE                        # Open-source MIT license
+│
 ├── data/
 │   └── movies.csv                 # 50-movie curated dataset with metadata & posters
 │
 ├── notebooks/
-│   └── movie_recommendation.ipynb # Step-by-step Data Science & EDA notebook
+│   └── movie_recommendation.ipynb # End-to-end Data Science, EDA & ML notebook
 │
 ├── src/
 │   ├── __init__.py                # Package initializer
-│   ├── data_preprocessing.py      # Cleaning and feature engineering pipeline
-│   └── recommendation.py          # TF-IDF & Cosine Similarity recommendation engine
+│   ├── data_preprocessing.py      # Data cleaning and feature engineering pipeline
+│   ├── recommendation.py          # TF-IDF & Cosine Similarity recommendation engine
+│   └── app.py                     # Interactive Streamlit web application
 │
-├── templates/
-│   ├── index.html                 # Main search UI & history view
-│   └── recommendations.html       # Top 10 recommendations grid & hero card
+├── sql/
+│   ├── create_tables.sql          # Relational schema and seed data
+│   └── analysis_queries.sql       # Analytical SQL queries (CTEs, JOINs, aggregations)
 │
-├── static/
-│   ├── css/
-│   │   └── style.css              # Custom cinema dark theme stylesheet
-│   └── js/
-│       └── script.js              # Interactivity, loading states & poster fallback
+├── screenshots/
+│   ├── home.png                   # Application home screen & search controls
+│   ├── recommendations.png        # Movie recommendations card grid & match scores
+│   └── results.png                # Technical deep dive & SQL analytics dashboard
 │
-├── app.py                         # Flask web application controller & routes
-├── database.py                    # SQLite search history manager
-├── requirements.txt               # Lightweight production dependencies
-├── render.yaml                    # Render Free Web Service deployment spec
-├── .gitignore                     # Git ignore rules for clean repository
-└── README.md                      # Comprehensive project documentation
+└── docs/
+    ├── project_report.pdf         # Professional PDF project report for interviewers
+    ├── project_report.md          # Full 16-section technical report in markdown
+    └── interview_questions.md     # 25 project-specific interview Q&As with concepts
 ```
 
 ---
 
-## 📊 Dataset Information
+## 📸 Application Screenshots
 
-The application includes `data/movies.csv` featuring 50 popular films spanning sci-fi, action, crime, drama, animation, and fantasy. Each record contains:
+### 1. Application Home Screen
+Search bar with autocomplete, catalog overview metrics, and quick selection controls.
+![Application Home Screen](screenshots/home.png)
 
-| Column | Description | Example |
-|---|---|---|
-| `movie_id` | Unique identifier | `1` |
-| `title` | Official release title | `The Dark Knight` |
-| `genres` | Primary genre classifications | `Action, Crime, Drama` |
-| `overview` | Synopsis of the plot | `When the menace known as the Joker...` |
-| `keywords` | Descriptive plot and theme tags | `batman dc comics joker gotham vigilante` |
-| `cast` | Lead actors and actresses | `Christian Bale, Heath Ledger, Aaron Eckhart` |
-| `director` | Directing talent | `Christopher Nolan` |
-| `rating` | Average viewer rating (0–10) | `9.0` |
-| `release_year` | Original release year | `2008` |
-| `poster_url` | High-resolution public poster URL | `https://image.tmdb.org/t/p/w500/...` |
+### 2. Movie Recommendations Grid
+Top recommendations displaying movie poster artwork, percentage match badges, IMDb ratings, and directors.
+![Movie Recommendations Grid](screenshots/recommendations.png)
 
-### Scaling to a Larger Dataset
-To expand the catalog to 5,000+ or 45,000+ titles:
-1. Download the public [TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata) or [The Movies Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset) from Kaggle for free.
-2. Ensure the CSV contains the matching column headers or map them in `src/data_preprocessing.py`.
-3. Place the file at `data/movies.csv`. The recommendation engine will automatically process the new records at startup!
-
-> **Dataset Disclaimer**: The application code is licensed separately under MIT. Third-party movie metadata and imagery belong to their respective copyright holders (e.g. TMDB). Please review and comply with their terms of use for commercial redistribution.
+### 3. Technical Analytics & SQL Showcase
+Interactive deep dive demonstrating live SQL query execution, catalog filtering, and algorithm mechanics.
+![Technical Analytics Dashboard](screenshots/results.png)
 
 ---
 
-## 💻 Local Installation (Windows & Linux)
+## 🚀 Live Demo & Free Cloud Deployment
 
-### Step 1: Open Terminal / PowerShell
-Clone or navigate to your project directory:
+### Live Application Link
+> 🔗 **Live Demo:** [ADD LIVE DEMO LINK HERE]  
+> *(Deploy on Streamlit Community Cloud using the step-by-step guide below).*
+
+### Deploying to Streamlit Community Cloud (100% Free):
+Streamlit Community Cloud allows free hosting directly connected to your GitHub repository:
+
+1. **Push Repository to GitHub**: Ensure all project files, especially `requirements.txt` and `src/app.py`, are pushed to your GitHub repository `vadiyaom/movie-recommendation-system`.
+2. **Sign In**: Visit [share.streamlit.io](https://share.streamlit.io/) and log in with your GitHub account.
+3. **Create New App**: Click **"New app"**.
+4. **Configure Settings**:
+   - **Repository**: `vadiyaom/movie-recommendation-system`
+   - **Branch**: `main`
+   - **Main file path**: `src/app.py`
+5. **Deploy**: Click **"Deploy!"**.
+6. **Obtain Live URL**: Within 1–2 minutes, Streamlit will install dependencies and deploy the live application at:
+   `https://vadiyaom-movie-recommendation-system.streamlit.app` (or your custom URL). Update the `[ADD LIVE DEMO LINK HERE]` above with your live link.
+
+---
+
+## 💻 Local Installation & Setup
+
+Follow these steps to run the project locally on your machine (Windows PowerShell):
+
+### Step 1: Clone the Repository
 ```powershell
-cd e:\Desktop\movie
+git clone https://github.com/vadiyaom/movie-recommendation-system.git
+cd movie-recommendation-system
 ```
 
-### Step 2: Create a Virtual Environment
+### Step 2: Create and Activate Virtual Environment
 ```powershell
 python -m venv venv
+.\venv\Scripts\Activate.ps1
 ```
 
-### Step 3: Activate the Virtual Environment
-- **On Windows (PowerShell):**
-  ```powershell
-  venv\Scripts\Activate.ps1
-  ```
-  *(If PowerShell displays an execution policy warning, run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` once).*
-- **On Windows (Command Prompt):**
-  ```cmd
-  venv\Scripts\activate.bat
-  ```
-- **On macOS / Linux:**
-  ```bash
-  source venv/bin/activate
-  ```
-
-### Step 4: Install Dependencies
+### Step 3: Install Required Dependencies
 ```powershell
 pip install -r requirements.txt
 ```
 
-### Step 5: Run the Flask Web Application
+### Step 4: Run the Streamlit Application
 ```powershell
-python app.py
+python -m streamlit run src/app.py
 ```
 
-### Step 6: Open in Your Browser
-Visit:
+### Step 5: Open in Your Browser
+The application will launch automatically. If not, open your browser and navigate to:
 ```text
-http://127.0.0.1:5000
+http://localhost:8501
 ```
 
 ---
 
-## 🚀 Free Deployment Guide on Render ($0 / ₹0)
+## 📚 Project Documentation & Interview Guide
 
-Render provides free hosting for Python web services with automated GitHub deployments.
-
-### Step 1: Create a Free GitHub Account & Repository
-1. Go to [github.com](https://github.com) and create a free account if you haven't already.
-2. Click **New Repository**, name it `movie-recommendation-system`, select **Public**, and click **Create repository**.
-
-### Step 2: Push Your Code to GitHub
-Run the following commands inside your local project root:
-
-```bash
-# 1. Initialize git version control
-git init
-
-# 2. Stage all project files (ignoring files specified in .gitignore)
-git add .
-
-# 3. Create the initial commit
-git commit -m "Initial Movie Recommendation System"
-
-# 4. Set the default branch to main
-git branch -M main
-
-# 5. Connect your remote GitHub repository (replace with your URL)
-git remote add origin https://github.com/YOUR_USERNAME/movie-recommendation-system.git
-
-# 6. Push code to GitHub
-git push -u origin main
-```
-
-**Explanation of Git Commands for Beginners:**
-- `git init`: Initializes a new Git repository locally.
-- `git add .`: Packages all changes in the current directory ready for committing.
-- `git commit -m "..."`: Records a snapshot of your files with a descriptive message.
-- `git branch -M main`: Renames your primary working branch to `main`.
-- `git remote add origin <URL>`: Links your local computer folder to your remote GitHub page.
-- `git push -u origin main`: Uploads your committed files to GitHub.
+- 📄 **[Comprehensive Project Report (PDF)](docs/project_report.pdf)**: Formal technical report designed to share with recruiters and interviewers.
+- 📝 **[Technical Report (Markdown)](docs/project_report.md)**: Full 16-section technical breakdown covering methodology, architecture, and results.
+- 🎯 **[25 Interview Questions & Answers](docs/interview_questions.md)**: Curated technical questions spanning Python, Pandas, NumPy, SQL, Machine Learning, and Deployment with concepts tested.
 
 ---
 
-### Step 3: Create a Free Account on Render
-1. Visit [render.com](https://render.com) and click **Sign Up** using your GitHub account.
+## 👨‍💻 Author
 
-### Step 4: Deploy the Web Service
-1. In your Render Dashboard, click **New +** and select **Web Service**.
-2. Select **Build and deploy from a Git repository** and connect your `movie-recommendation-system` repository.
-3. Configure the service settings:
-   - **Name**: `cine-movie-recommender` (or any unique name)
-   - **Region**: Choose the region closest to you (e.g. Frankfurt, Oregon, Singapore)
-   - **Branch**: `main`
-   - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-   - **Instance Type**: **Free** ($0 / month)
-4. Click **Deploy Web Service**.
+**Om Vadiya**  
+*Data Science Student | Python | SQL | Machine Learning*
 
-### Step 5: Access Your Live Application
-Render will provision the container, install dependencies, and launch Gunicorn. Within 2–3 minutes, your live public URL will be ready:
-```text
-https://cine-movie-recommender.onrender.com
-```
-
----
-
-## ⚠️ Free Deployment Limitations & Architecture Considerations
-
-Render's free tier provides generous compute resources for personal portfolios and university projects. Keep the following operational characteristics in mind:
-
-1. **Inactivity Sleep & Cold Starts**: Free Render web services spin down after 15 minutes of inactivity. When a new visitor accesses the URL, the initial request takes approximately 30–50 seconds to warm up ("cold start"). Subsequent requests are fast and responsive.
-2. **Ephemeral SQLite Filesystem**: Free instances do not include persistent disk attachments. If the container restarts or re-deploys, changes written to `movies.db` (search history) may reset.
-   - **Why this design is safe**: The recommendation system runs entirely off `data/movies.csv` and Scikit-Learn in-memory data structures. It **never depends on SQLite for recommendations**. Search history is an optional perk, and database errors are isolated with fail-safe exception guards.
-   - **If permanent persistence is required later**: You can easily swap the SQLite connection for a free cloud PostgreSQL database (e.g. Supabase, Neon, or Render Free Postgres).
-
----
-
-## 🔬 Data Science & Machine Learning Deep Dive
-
-### What is Content-Based Filtering?
-Content-Based Filtering is an information retrieval technique that recommends items based on the **intrinsic characteristics of the items themselves** rather than user behavior. In movie recommendation, if a user enjoys *The Dark Knight*, the algorithm analyzes attributes such as genres (*Action, Crime*), directors (*Christopher Nolan*), lead actors (*Christian Bale*), and plot keywords (*vigilante, Gotham*) to recommend other films sharing these features.
-
-### What is TF-IDF?
-**TF-IDF** stands for **Term Frequency-Inverse Document Frequency**:
-$$\text{TF-IDF}(t, d, D) = \text{TF}(t, d) \times \text{IDF}(t, D)$$
-1. **Term Frequency (TF)**: How frequently a word $t$ appears in a specific movie's description $d$.
-2. **Inverse Document Frequency (IDF)**: Measures how common or rare a word is across the entire movie catalog $D$:
-   $$\text{IDF}(t, D) = \log\left(\frac{N}{|\{d \in D : t \in d\}|}\right)$$
-- Common words (like "the", "a", "movie") appear in all descriptions and receive an IDF weight near zero.
-- Distinctive words (like "joker", "gotham", "wormhole", "pandora", "mob") appear in only a few movies and receive a high IDF weight.
-
-### What is Cosine Similarity?
-Cosine Similarity evaluates the geometric cosine of the angle between two multi-dimensional feature vectors $\vec{A}$ and $\vec{B}$:
-$$\text{Cosine Similarity}(\vec{A}, \vec{B}) = \frac{\vec{A} \cdot \vec{B}}{\|\vec{A}\| \|\vec{B}\|} = \frac{\sum_{i=1}^{n} A_i B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \sqrt{\sum_{i=1}^{n} B_i^2}}$$
-- **Value of 1.0 (100%)**: The two vectors point in the identical direction (maximal thematic similarity).
-- **Value of 0.0 (0%)**: The vectors are perpendicular (no overlapping relevant vocabulary).
-
-### Why Do Similar Movies Receive Higher Scores?
-When two movies share uncommon tokens (e.g., "Christopher Nolan", "Christian Bale", "Gotham", "vigilante"), the dot product of their TF-IDF vectors produces a high numerator. Because the vectors are normalized by Euclidean magnitude, long overviews do not artificially bias the score, ensuring fair comparison.
-
----
-
-## 🧪 Testing Guide
-
-Verify the system using the following test cases:
-
-| Test Case | User Input | Expected Result |
-|---|---|---|
-| **Test 1** | `The Dark Knight` | Renders top recommendations (*Batman Begins*, *The Dark Knight Rises*, *The Prestige*, etc.) with >20% affinity. |
-| **Test 2** | `Inception` | Returns mind-bending sci-fi films (*Tenet*, *Interstellar*, *The Matrix*, *Shutter Island*). |
-| **Test 3** | `xyzabc123` | Does **not** crash. Displays: *"Movie 'xyzabc123' not found. Please enter a movie from our available movie list."* |
-| **Test 4** | *(Empty string)* | Client-side validation prompts user; backend displays: *"Please enter a movie name to get recommendations."* |
-
----
-
-## 🛠️ Common Errors & Solutions
-
-1. **`ModuleNotFoundError: No module named 'sklearn'`**
-   - **Cause**: Virtual environment not activated or dependencies not installed.
-   - **Fix**: Run `venv\Scripts\activate` followed by `pip install -r requirements.txt`.
-2. **`Address already in use: Port 5000`**
-   - **Cause**: Another service or previous Flask instance is still running on port 5000.
-   - **Fix**: Run `python app.py` on another port via environment variable `$env:PORT="5001"; python app.py` or stop the running process.
-3. **Images not loading / Red cross icon**
-   - **Cause**: Slow internet or restricted network blocking TMDB image domains.
-   - **Fix**: The application includes an automatic JavaScript error trap (`handlePosterError`) that gracefully converts broken images into an elegant CSS gradient poster card with the movie title.
-
----
-
-## 💼 Resume & Portfolio Description
-
-Use this summary on your resume, LinkedIn, or during interviews:
-
-> **Movie Recommendation System**
-> *Python | Pandas | Scikit-learn | Flask | SQLite | Render*
-> - Engineered an end-to-end content-based movie recommendation web application using TF-IDF vectorization and Cosine Similarity across multi-field metadata (genres, plot synopsis, cast, and director).
-> - Optimized search latency by precomputing vector matrices at startup, delivering sub-10ms recommendations.
-> - Developed a full-stack Flask application with automated SQLite query logging, responsive Jinja2 templates, and deployed online using Render's free cloud infrastructure.
+- **GitHub:** [@vadiyaom](https://github.com/vadiyaom)  
+- **LinkedIn:** [linkedin.com/in/Vadiya-Om/](https://www.linkedin.com/in/Vadiya-Om/)  
+- **Email:** [vadiyaom18@gmail.com](mailto:vadiyaom18@gmail.com)  
+- **College:** M J College of Commerce  
+- **University:** Maharaja Krishnakumarsinhji Bhavnagar University  
+- **Expected Graduation:** July 2026  
+- **CGPA:** 7.08 / 10  
+- **Career Focus:** Data Science  
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this software for educational and personal portfolio purposes.
+This project is licensed under the [MIT License](LICENSE) — see the LICENSE file for details.
